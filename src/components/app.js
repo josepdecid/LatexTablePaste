@@ -28,6 +28,12 @@ export default class App extends Component {
     this.setState({ alignmentCols });
   }
 
+  onCopyClipboard() {
+    const copyText = document.getElementById('latexInput');
+    copyText.select();
+    document.execCommand('copy');
+  }
+
   convertToChunckedData(data) {
     const { numberCols } = this.state;
     let columnsLeft = numberCols;
@@ -43,12 +49,17 @@ export default class App extends Component {
   }
 
   convertToLatex(data) {
-    let result = '';
+    const { caption, alignmentCols } = this.state;
+    let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{'
+    result += '|c|c|c|c|';
+    result += '}\\hline\n\t';
     data.forEach(row => {
       row.forEach(value => { result += `${value} & ` });
       result = result.slice(0, -2);
-      result += '\\\\ \\hline\n';
-    }); return result.slice(0, -1);
+      result += '\\\\ \\hline\n\t';
+    });
+    result = `${result.slice(0, -1)}\\end{tabular}\n`;
+    return `${result}\\caption{${caption}}\n\\label{table:}\n\\end{table}`;
   }
 
   onGenerateOutputTable() {
@@ -73,7 +84,6 @@ export default class App extends Component {
   }
 
   render() {
-    const alignments = this.renderAlignments();
     return (
       <div>
         <nav className="navbar is-primary" color="blue" role="navigation" aria-label="main navigation">
@@ -95,21 +105,22 @@ export default class App extends Component {
           <div className="field">
             <div className="control">
               <input
-                type="number" className="input input-cols auto-width is-primary" value={this.state.numberCols}
+                type="number" className="input input-cols auto-width is-primary"
+                value={this.state.numberCols}
                 onChange={event => this.onColumnsChange(event.target.value)}
-                placeholder="Number of table columns" />
-              {alignments}
-            </div>
-          </div>
-          <div className="field input-table">
-            <div className="control ">
-              <textarea
-                rows="10" className="textarea is-primary" type="text" placeholder="Paste your table here..."
-                value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
+                placeholder="#columns" />
+              {this.renderAlignments()}
             </div>
           </div>
 
-          
+          <div className="field input-table">
+            <div className="control ">
+              <textarea
+                rows="5" className="textarea is-primary" type="text" placeholder="Paste your table here..."
+                value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
+            </div>
+          </div>
+  
           <button
             className="button is-rounded is-primary"
             onClick={() => this.onGenerateOutputTable()}>Convert!
@@ -119,12 +130,17 @@ export default class App extends Component {
           <div className="field result-table">
             <div className="control">
               <textarea
-                rows="10"
+                rows="8"
                 className="textarea is-primary"
                 type="text" placeholder="Latex result here..."
-                value={this.state.latexData}></textarea>
+                value={this.state.latexData}>
+              </textarea>
             </div>
           </div>
+          <button
+            className="button is-rounded is-primary"
+            onClick={() => this.onCopyClipboard()}>Copy to clipboard
+            </button>
         </div>
       </div>
     );

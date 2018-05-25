@@ -76,8 +76,8 @@ export default class App extends Component {
   renderAlignments() {
     const { numberCols, alignmentCols } = this.state;
     if (numberCols) {
-      console.log(Array(numberCols).keys());
-      return [...Array(numberCols).keys()].map(i =>
+      const arr = Array.from(Array(numberCols).keys());
+      return arr.map(i =>
         <input
           className="input single-character is-primary"
           key={i} value={alignmentCols[i]}

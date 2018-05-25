@@ -5,17 +5,27 @@ export default class App extends Component {
     super(props);
     this.state = {
       tableData: '',
-      numberCols: 4,
+      numberCols: 1,
+      alignmentCols: ['c'],
       latexData: ''
     };
   }
 
   onColumnsChange(numberCols) {
-    this.setState({ numberCols });
+    this.setState({
+      numberCols: numberCols,
+      alignmentCols: Array(numberCols).fill('c')
+    });
   }
 
   onDataChange(tableData) {
     this.setState({ tableData });
+  }
+
+  onAlignmentChange(value, index) {
+    const { alignmentCols } = this.state;
+    alignmentCols[index] = value;
+    this.setState({ alignmentCols });
   }
 
   convertToChunckedData(data) {
@@ -50,63 +60,70 @@ export default class App extends Component {
   }
 
   renderAlignments() {
-    const { numberCols } = this.state;
-    [...Array(numberCols).keys()].map(key => {
-      return <input key={key} />;
+    const { numberCols, alignmentCols } = this.state;
+    return [...Array(numberCols).keys()].map(i => {
+      return (
+        <input
+          className="input single-character"
+          key={i} value={alignmentCols[i]}
+          onChange={event => this.onAlignmentChange(event.target.value, index)}
+        />
+      );
     });
   }
 
   render() {
+    const alignments = this.renderAlignments();
     return (
       <div>
         <nav className="navbar is-primary" color="blue" role="navigation" aria-label="main navigation">
           <div className="navbar-brand">
-            <a class="navbar-item">
+            <a className="navbar-item">
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85"></img>
-              </a>
-              <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-                <p>LaTeXTablePaste</p>
-              </a>
+            </a>
+            <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
+              <p>LatexTablePaste</p>
+            </a>
           </div>
         </nav>
 
-          <div className="container" >
-            <h2 className="app-title">LaTeX·Table·Paste</h2>
-            <br />
-            <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
+        <div className="container" >
+          <h2 className="app-title">LaTeX·Table·Paste</h2>
+          <br />
+          <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
 
-            <div class="field input-table">
-              <div class="control ">
-                <textarea
-                  className="textarea is-primary" type="text" placeholder="Paste your table here..."
-                  value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
-              </div>
+          <div className="field input-table">
+            <div className="control ">
+              <textarea
+                className="textarea is-primary" type="text" placeholder="Paste your table here..."
+                value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
             </div>
+          </div>
 
           <div className="field">
             <div className="control">
               <input
-                className="input auto-width" type="number" value={this.state.numberCols}
-                onChange={event => this.onColumnsChange(event.target.value)}/>
-              {this.renderAlignments()}
+                type="number" className="input auto-width" value={this.state.numberCols}
+                onChange={event => this.onColumnsChange(event.target.value)} />
+              {alignments}
               <button
                 className="button is-rounded is-primary"
                 onClick={() => this.onGenerateOutputTable()}>Convert!
             </button>
-              </div>
+            </div>
 
-              <h4 className="app-title">Result</h4>
-              <div className="field result-table">
-                <div className="control">
-                  <textarea
-                    className="textarea is-primary"
-                    type="text" placeholder="Latex result here..."
-                    value={this.state.latexData}></textarea>
-                </div>
+            <h4 className="app-title">Result</h4>
+            <div className="field result-table">
+              <div className="control">
+                <textarea
+                  className="textarea is-primary"
+                  type="text" placeholder="Latex result here..."
+                  value={this.state.latexData}></textarea>
               </div>
             </div>
           </div>
+        </div>
       </div>
-        );
-      }
-    }
+    );
+  }
+}

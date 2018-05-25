@@ -26,3 +26,7 @@ textarea {
 .auto-width {
     width: auto;
 }
+
+.single-character {
+    width: 2em;
+}

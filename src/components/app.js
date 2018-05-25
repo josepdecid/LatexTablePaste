@@ -7,7 +7,9 @@ export default class App extends Component {
       tableData: '',
       numberCols: undefined,
       alignmentCols: ['c'],
-      latexData: ''
+      latexData: '',
+      caption: '',
+      label: ''
     };
   }
 
@@ -22,19 +24,30 @@ export default class App extends Component {
     this.setState({ tableData });
   }
 
+  onCaptionChange(caption) {
+    this.setState({ caption });
+  }
+
+  onLabelChange(label) {
+    this.setState({ label });
+  }
+
   onAlignmentChange(value, index) {
     const { alignmentCols } = this.state;
     alignmentCols[index] = value;
     this.setState({ alignmentCols });
   }
 
+
   onCopyClipboard() {
     const copyText = document.getElementById('latexInput');
+    const x = document.getElementById('snackbar');
     copyText.select();
     document.execCommand('copy');
-    var x = document.getElementById("snackbar");
-    x.className = "show";
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    x.className = 'show';
+    setTimeout(() => {
+      x.className = x.className.replace('show', '');
+    }, 3000);
   }
 
   onGenerateOutputTable() {
@@ -60,7 +73,7 @@ export default class App extends Component {
   }
 
   convertToLatex(data) {
-    const { caption } = this.state;
+    const { caption, label } = this.state;
     let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{';
     result += '|c|c|c|c|';
     result += '}\\hline\n\t';
@@ -70,7 +83,7 @@ export default class App extends Component {
       result += '\\\\ \\hline\n\t';
     });
     result = `${result.slice(0, -1)}\\end{tabular}\n`;
-    return `${result}\\caption{${caption}}\n\\label{table:}\n\\end{table}`;
+    return `${result}\\caption{${caption}}\n\\label{table:${label}}\n\\end{table}`;
   }
 
   renderAlignments() {
@@ -170,11 +183,7 @@ export default class App extends Component {
           >Copy to clipboard</button>
         </div>
 
-
-
-        {/* Copy Clipboard Toast */}
         <div id="snackbar">Table copied to Clipboard.</div>
-
       </div>
     );
   }

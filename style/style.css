@@ -6,10 +6,12 @@ nav {
 }
 
 .app-title {
-    margin-top: 1.5em;
+    margin-top: 1em;
 }
 
-
+img {
+    filter: brightness(0) invert(1);
+}
 
 textarea {
     width: 100%;

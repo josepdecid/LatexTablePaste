@@ -54,45 +54,48 @@ export default class App extends Component {
       <div>
         <nav className="navbar is-primary" color="blue" role="navigation" aria-label="main navigation">
           <div className="navbar-brand">
-            <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-              <p>LatexTablePaste</p>
-            </a>
+            <a class="navbar-item">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85"></img>
+              </a>
+              <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
+                <p>LatexTablePaste</p>
+              </a>
           </div>
         </nav>
 
-        <div className="container" >
-          <h2 className="app-title">LatexTablePaste</h2>
-          <br />
-          <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
+          <div className="container" >
+            <h2 className="app-title">LatexTablePaste</h2>
+            <br />
+            <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
 
-          <div class="field input-table">
-            <div class="control ">
-              <textarea
-                className="textarea is-primary" type="text" placeholder="Paste your table here..."
-                value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
-            </div>
-          </div>
-
-          <div className="field">
-            <div className="control">
-              <button
-                className="button is-rounded is-primary"
-                onClick={() => this.onGenerateOutputTable()}>Convert!
-            </button>
-            </div>
-
-            <h4 className="app-title">Result</h4>
-            <div className="field result-table">
-              <div className="control">
+            <div class="field input-table">
+              <div class="control ">
                 <textarea
-                  className="textarea is-primary"
-                  type="text" placeholder="Latex result here..."
-                  value={this.state.latexData}></textarea>
+                  className="textarea is-primary" type="text" placeholder="Paste your table here..."
+                  value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
+              </div>
+            </div>
+
+            <div className="field">
+              <div className="control">
+                <button
+                  className="button is-rounded is-primary"
+                  onClick={() => this.onGenerateOutputTable()}>Convert!
+            </button>
+              </div>
+
+              <h4 className="app-title">Result</h4>
+              <div className="field result-table">
+                <div className="control">
+                  <textarea
+                    className="textarea is-primary"
+                    type="text" placeholder="Latex result here..."
+                    value={this.state.latexData}></textarea>
+                </div>
               </div>
             </div>
           </div>
-        </div>
       </div>
-    );
-  }
-}
+        );
+      }
+    }

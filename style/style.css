@@ -9,6 +9,14 @@ nav {
     margin-top: 1em;
 }
 
+#base {
+    margin-bottom: 6em;
+}
+
+.input-cols {
+    margin-right: 8px;
+}
+
 img {
     filter: brightness(0) invert(1);
 }
@@ -20,7 +28,8 @@ textarea {
 
 .button {
     text-align: center;
-    width: 30%;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .auto-width {

@@ -5,7 +5,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       tableData: '',
-      numberCols: 1,
+      numberCols: undefined,
       alignmentCols: ['c'],
       latexData: ''
     };
@@ -24,8 +24,8 @@ export default class App extends Component {
 
   onAlignmentChange(value, index) {
     const { alignmentCols } = this.state;
-    alignmentCols[index] = value;
-    this.setState({ alignmentCols });
+    alignmentCols[index] = value;
+    this.setState({ alignmentCols });
   }
 
   convertToChunckedData(data) {
@@ -60,11 +60,11 @@ export default class App extends Component {
   }
 
   renderAlignments() {
-    const { numberCols, alignmentCols } = this.state;
+    const { numberCols, alignmentCols } = this.state;
     return [...Array(numberCols).keys()].map(i => {
       return (
         <input
-          className="input single-character"
+          className="input single-character is-primary"
           key={i} value={alignmentCols[i]}
           onChange={event => this.onAlignmentChange(event.target.value, index)}
         />
@@ -92,34 +92,37 @@ export default class App extends Component {
           <br />
           <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
 
+          <div className="field">
+            <div className="control">
+              <input
+                type="number" className="input input-cols auto-width is-primary" value={this.state.numberCols}
+                onChange={event => this.onColumnsChange(event.target.value)}
+                placeholder="Number of table columns" />
+              {alignments}
+            </div>
+          </div>
           <div className="field input-table">
             <div className="control ">
               <textarea
-                className="textarea is-primary" type="text" placeholder="Paste your table here..."
+                rows="10" className="textarea is-primary" type="text" placeholder="Paste your table here..."
                 value={this.state.tableData} onChange={event => this.onDataChange(event.target.value)}></textarea>
             </div>
           </div>
 
-          <div className="field">
-            <div className="control">
-              <input
-                type="number" className="input auto-width" value={this.state.numberCols}
-                onChange={event => this.onColumnsChange(event.target.value)} />
-              {alignments}
-              <button
-                className="button is-rounded is-primary"
-                onClick={() => this.onGenerateOutputTable()}>Convert!
-            </button>
-            </div>
+          
+          <button
+            className="button is-rounded is-primary"
+            onClick={() => this.onGenerateOutputTable()}>Convert!
+          </button>
 
-            <h4 className="app-title">Result</h4>
-            <div className="field result-table">
-              <div className="control">
-                <textarea
-                  className="textarea is-primary"
-                  type="text" placeholder="Latex result here..."
-                  value={this.state.latexData}></textarea>
-              </div>
+          <h4 className="app-title">Result</h4>
+          <div className="field result-table">
+            <div className="control">
+              <textarea
+                rows="10"
+                className="textarea is-primary"
+                type="text" placeholder="Latex result here..."
+                value={this.state.latexData}></textarea>
             </div>
           </div>
         </div>

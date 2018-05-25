@@ -11,56 +11,6 @@ export default class App extends Component {
     };
   }
 
-  convertToChunckedData(data) {
-    const { numberCols } = this.state;
-    let columnsLeft = numberCols;
-    return data.reduce((acc, x) => {
-      if (columnsLeft === 0) {
-        columnsLeft = numberCols - 1;
-        acc.push([x]);
-      } else {
-        --columnsLeft;
-        acc[acc.length - 1].push(x);
-      } return acc;
-    }, [[]]);
-  }
-
-  convertToLatex(data) {
-    const { caption, alignmentCols } = this.state;
-    let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{';
-    result += '|c|c|c|c|';
-    result += '}\\hline\n\t';
-    data.forEach(row => {
-      row.forEach(value => { result += `${value} & `; });
-      result = result.slice(0, -2);
-      result += '\\\\ \\hline\n\t';
-    });
-    result = `${result.slice(0, -1)}\\end{tabular}\n`;
-    return `${result}\\caption{${caption}}\n\\label{table:}\n\\end{table}`;
-  }
-
-  onGenerateOutputTable() {
-    const { tableData } = this.state;
-    const splittedData = tableData.trim().split(/\s+/);
-    const chunckedData = this.convertToChunckedData(splittedData);
-    const latexData = this.convertToLatex(chunckedData);
-    this.setState({ latexData });
-  }
-
-  renderAlignments() {
-    const { numberCols, alignmentCols } = this.state;
-    if (numberCols) {
-      console.log(Array(numberCols).keys());
-      return [...Array(numberCols).keys()].map(i =>
-        <input
-          className="input single-character is-primary"
-          key={i} value={alignmentCols[i]}
-          onChange={event => this.onAlignmentChange(event.target.value, i)}
-        />
-      );
-    }
-  }
-
   onColumnsChange(numberCols) {
     this.setState({
       numberCols,
@@ -84,10 +34,63 @@ export default class App extends Component {
     document.execCommand('copy');
   }
 
+  onGenerateOutputTable() {
+    const { tableData } = this.state;
+    const splittedData = tableData.trim().split(/\s+/);
+    const chunckedData = this.convertToChunckedData(splittedData);
+    const latexData = this.convertToLatex(chunckedData);
+    this.setState({ latexData });
+  }
+
+  convertToChunckedData(data) {
+    const { numberCols } = this.state;
+    let columnsLeft = numberCols;
+    return data.reduce((acc, x) => {
+      if (columnsLeft === 0) {
+        columnsLeft = numberCols - 1;
+        acc.push([x]);
+      } else {
+        --columnsLeft;
+        acc[acc.length - 1].push(x);
+      } return acc;
+    }, [[]]);
+  }
+
+  convertToLatex(data) {
+    const { caption } = this.state;
+    let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{';
+    result += '|c|c|c|c|';
+    result += '}\\hline\n\t';
+    data.forEach(row => {
+      row.forEach(value => { result += `${value} & `; });
+      result = result.slice(0, -2);
+      result += '\\\\ \\hline\n\t';
+    });
+    result = `${result.slice(0, -1)}\\end{tabular}\n`;
+    return `${result}\\caption{${caption}}\n\\label{table:}\n\\end{table}`;
+  }
+
+  renderAlignments() {
+    const { numberCols, alignmentCols } = this.state;
+    if (numberCols) {
+      console.log(Array(numberCols).keys());
+      return [...Array(numberCols).keys()].map(i =>
+        <input
+          className="input single-character is-primary"
+          key={i} value={alignmentCols[i]}
+          onChange={event => this.onAlignmentChange(event.target.value, i)}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <div>
-        <nav className="navbar is-primary" color="blue" role="navigation" aria-label="main navigation">
+        <nav
+          className="navbar is-primary" color="blue"
+          role="navigation" aria-label="main navigation"
+        >
           <div className="navbar-brand">
             <a className="navbar-item">
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85" />

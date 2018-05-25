@@ -13,8 +13,12 @@ nav {
     margin-bottom: 6em;
 }
 
-.input-cols {
+.input-cols, .input-caption {
     margin-right: 8px;
+}
+
+.input-caption, .input-label {
+    width: 49.6% !important;
 }
 
 img {

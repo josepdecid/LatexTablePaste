@@ -121,6 +121,23 @@ export default class App extends Component {
             </div>
           </div>
 
+          <div className="field">
+            <div className="control">
+              <input
+                type="text" className="input input-caption auto-width is-primary"
+                value={this.state.numberCols}
+                onChange={event => this.onColumnsChange(event.target.value)}
+                placeholder="Caption"
+              />
+              <input
+                type="text" className="input input-label auto-width is-primary"
+                value={this.state.numberCols}
+                onChange={event => this.onColumnsChange(event.target.value)}
+                placeholder="Label"
+              />
+            </div>
+          </div>
+
           <div className="field input-table">
             <div className="control ">
               <textarea

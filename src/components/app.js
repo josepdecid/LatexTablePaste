@@ -32,6 +32,9 @@ export default class App extends Component {
     const copyText = document.getElementById('latexInput');
     copyText.select();
     document.execCommand('copy');
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
   }
 
   onGenerateOutputTable() {
@@ -137,7 +140,7 @@ export default class App extends Component {
           <div className="field result-table">
             <div className="control">
               <textarea
-                rows="8"
+                id="latexInput" rows="8"
                 className="textarea is-primary"
                 type="text" placeholder="Latex result here..."
                 value={this.state.latexData}
@@ -149,6 +152,12 @@ export default class App extends Component {
             onClick={() => this.onCopyClipboard()}
           >Copy to clipboard</button>
         </div>
+
+
+
+        {/* Copy Clipboard Toast */}
+        <div id="snackbar">Table copied to Clipboard.</div>
+
       </div>
     );
   }

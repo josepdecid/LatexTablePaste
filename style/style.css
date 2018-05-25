@@ -22,3 +22,7 @@ textarea {
     text-align: center;
     width: 30%;
 }
+
+.auto-width {
+    width: auto;
+}

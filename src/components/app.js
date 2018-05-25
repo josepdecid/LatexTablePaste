@@ -42,11 +42,18 @@ export default class App extends Component {
   }
 
   onGenerateOutputTable() {
-    const { tableData, numberCols } = this.state;
+    const { tableData } = this.state;
     const splittedData = tableData.trim().split(/\s+/);
     const chunckedData = this.convertToChunckedData(splittedData);
     const latexData = this.convertToLatex(chunckedData);
     this.setState({ latexData });
+  }
+
+  renderAlignments() {
+    const { numberCols } = this.state;
+    [...Array(numberCols).keys()].map(key => {
+      return <input key={key} />;
+    });
   }
 
   render() {
@@ -76,11 +83,15 @@ export default class App extends Component {
               </div>
             </div>
 
-            <div className="field">
-              <div className="control">
-                <button
-                  className="button is-rounded is-primary"
-                  onClick={() => this.onGenerateOutputTable()}>Convert!
+          <div className="field">
+            <div className="control">
+              <input
+                className="input auto-width" value={this.state.numberCols}
+                onChange={event => this.onColumnsChange(event.target.value)}/>
+              {this.renderAlignments()}
+              <button
+                className="button is-rounded is-primary"
+                onClick={() => this.onGenerateOutputTable()}>Convert!
             </button>
               </div>
 

@@ -65,13 +65,13 @@ export default class App extends Component {
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85"></img>
               </a>
               <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-                <p>LatexTablePaste</p>
+                <p>LaTeXTablePaste</p>
               </a>
           </div>
         </nav>
 
           <div className="container" >
-            <h2 className="app-title">LatexTablePaste</h2>
+            <h2 className="app-title">LaTeX·Table·Paste</h2>
             <br />
             <p>Submit your shitty table to instantly have it for your Latex assignment!</p>
 
@@ -86,7 +86,7 @@ export default class App extends Component {
           <div className="field">
             <div className="control">
               <input
-                className="input auto-width" value={this.state.numberCols}
+                className="input auto-width" type="number" value={this.state.numberCols}
                 onChange={event => this.onColumnsChange(event.target.value)}/>
               {this.renderAlignments()}
               <button

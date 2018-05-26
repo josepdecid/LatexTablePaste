@@ -52,7 +52,7 @@ export default class App extends Component {
     x.className = 'show';
     setTimeout(() => {
       x.className = x.className.replace('show', '');
-    }, 5000);
+    }, 2900);
   }
 
   onGenerateOutputTable() {
@@ -120,7 +120,6 @@ export default class App extends Component {
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85" />
             </a>
             <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-              <p>LatexTablePaste</p>
             </a>
           </div>
         </nav>

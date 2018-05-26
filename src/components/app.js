@@ -5,7 +5,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       tableData: '',
-      numberCols: undefined,
+      numberCols: 1,
       alignmentCols: ['c'],
       latexData: '',
       caption: '',
@@ -14,9 +14,12 @@ export default class App extends Component {
   }
 
   onColumnsChange(numberCols) {
+    let num = numberCols ? parseInt(numberCols, 10) : 0;
+    if (num > 100) num = 100;
+    if (num < 0) num = 0;
     this.setState({
-      numberCols,
-      alignmentCols: Array(numberCols).fill('c')
+      numberCols: num,
+      alignmentCols: Array(num).fill('c')
     });
   }
 
@@ -33,9 +36,11 @@ export default class App extends Component {
   }
 
   onAlignmentChange(value, index) {
-    const { alignmentCols } = this.state;
-    alignmentCols[index] = value;
-    this.setState({ alignmentCols });
+    if (value === 'c' || value === 'l' || value === 'r' || !value) {
+      const { alignmentCols } = this.state;
+      alignmentCols[index] = value;
+      this.setState({ alignmentCols });
+    }
   }
 
 
@@ -47,7 +52,7 @@ export default class App extends Component {
     x.className = 'show';
     setTimeout(() => {
       x.className = x.className.replace('show', '');
-    }, 3000);
+    }, 5000);
   }
 
   onGenerateOutputTable() {
@@ -73,9 +78,9 @@ export default class App extends Component {
   }
 
   convertToLatex(data) {
-    const { caption, label } = this.state;
+    const { caption, label, alignmentCols } = this.state;
     let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{';
-    result += '|c|c|c|c|';
+    result += `${alignmentCols.reduce((acc, x) => `${acc}|${x}`, '')}|`;
     result += '}\\hline\n\t';
     data.forEach(row => {
       row.forEach(value => { result += `${value} & `; });
@@ -89,14 +94,17 @@ export default class App extends Component {
   renderAlignments() {
     const { numberCols, alignmentCols } = this.state;
     if (numberCols) {
-      const arr = Array.from(Array(numberCols).keys());
-      return arr.map(i =>
-        <input
-          className="input single-character is-primary"
-          key={i} value={alignmentCols[i]}
-          onChange={event => this.onAlignmentChange(event.target.value, i)}
-        />
-      );
+      let i = 0;
+      return alignmentCols.map(alignment => {
+        const input = (
+          <input
+            className="input single-character is-primary"
+            key={i} value={alignment}
+            onChange={event => this.onAlignmentChange(event.target.value, i)}
+          />
+        ); ++i;
+        return input;
+      });
     }
   }
 
@@ -126,9 +134,8 @@ export default class App extends Component {
             <div className="control">
               <input
                 type="number" className="input input-cols auto-width is-primary"
-                value={this.state.numberCols}
+                value={this.state.numberCols} placeholder="#columns"
                 onChange={event => this.onColumnsChange(event.target.value)}
-                placeholder="#columns"
               />
               {this.renderAlignments()}
             </div>
@@ -138,15 +145,13 @@ export default class App extends Component {
             <div className="control">
               <input
                 type="text" className="input input-caption auto-width is-primary"
-                value={this.state.numberCols}
-                onChange={event => this.onColumnsChange(event.target.value)}
-                placeholder="Caption"
+                placeholder="Caption" value={this.state.caption}
+                onChange={event => this.onCaptionChange(event.target.value)}
               />
               <input
                 type="text" className="input input-label auto-width is-primary"
-                value={this.state.numberCols}
-                onChange={event => this.onColumnsChange(event.target.value)}
-                placeholder="Label"
+                placeholder="Label" value={this.state.label}
+                onChange={event => this.onLabelChange(event.target.value)}
               />
             </div>
           </div>
@@ -160,7 +165,7 @@ export default class App extends Component {
               />
             </div>
           </div>
-  
+
           <button
             className="button is-rounded is-primary"
             onClick={() => this.onGenerateOutputTable()}

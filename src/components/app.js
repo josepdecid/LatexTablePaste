@@ -9,7 +9,9 @@ export default class App extends Component {
       alignmentCols: ['c'],
       latexData: '',
       caption: '',
-      label: ''
+      label: '',
+      horizontal: true,
+      vertical: true
     };
   }
 
@@ -35,6 +37,18 @@ export default class App extends Component {
     this.setState({ label });
   }
 
+  onSwitchHorizontal() {
+    this.setState({
+      horizontal: !this.state.horizontal
+    });
+  }
+
+  onSwitchVertical() {
+    this.setState({
+      vertical: !this.state.vertical
+    });
+  }
+
   onAlignmentChange(value, index) {
     if (value === 'c' || value === 'l' || value === 'r' || !value) {
       const { alignmentCols } = this.state;
@@ -42,7 +56,6 @@ export default class App extends Component {
       this.setState({ alignmentCols });
     }
   }
-
 
   onCopyClipboard() {
     const copyText = document.getElementById('latexInput');
@@ -80,12 +93,14 @@ export default class App extends Component {
   convertToLatex(data) {
     const { caption, label, alignmentCols } = this.state;
     let result = '\\begin{table}[htp!]\n\\centering\n\\begin{tabular}{';
-    result += `${alignmentCols.reduce((acc, x) => `${acc}|${x}`, '')}|`;
-    result += '}\\hline\n\t';
+    result += `${alignmentCols.reduce((acc, x) =>
+      `${acc}${this.state.vertical ? '|' : ''}${x}`, ''
+    )}${this.state.vertical ? '|' : ''}`;
+    result += `}${this.state.horizontal ? '\\hline' : ''}\n\t`;
     data.forEach(row => {
       row.forEach(value => { result += `${value} & `; });
       result = result.slice(0, -2);
-      result += '\\\\ \\hline\n\t';
+      result += `\\\\ ${this.state.horizontal ? '\\hline' : ''}\n\t`;
     });
     result = `${result.slice(0, -1)}\\end{tabular}\n`;
     return `${result}\\caption{${caption}}\n\\label{table:${label}}\n\\end{table}`;
@@ -119,8 +134,7 @@ export default class App extends Component {
             <a className="navbar-item">
               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/LaTeX_logo.svg/2000px-LaTeX_logo.svg.png" alt="LaTeX Table Paste" width="80" height="85" />
             </a>
-            <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-            </a>
+            <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" />
           </div>
         </nav>
 
@@ -152,6 +166,23 @@ export default class App extends Component {
                 placeholder="Label" value={this.state.label}
                 onChange={event => this.onLabelChange(event.target.value)}
               />
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="control">
+              <label htmlFor="horizontal-lines" className="checkbox">
+                <input
+                  id="horizontal-lines" type="checkbox"
+                  defaultChecked={this.state.horizontal}
+                  onChange={() => this.onSwitchHorizontal()}
+                />Horizontal lines</label>
+              <label htmlFor="vertical-lines" className="checkbox">
+                <input
+                  id="vertical-lines" type="checkbox"
+                  defaultChecked={this.state.horizontal}
+                  onChange={() => this.onSwitchVertical()}
+                />Vertical lines</label>
             </div>
           </div>
 
